@@ -1133,5 +1133,3 @@ ${selector}:hover {
     window.initGradientButtonGenerator = initGradientButtonGenerator;
 })();
 })();
-    // Continue with rest of the implementation...
-})();
