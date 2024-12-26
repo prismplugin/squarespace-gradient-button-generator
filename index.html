@@ -3,19 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradient Button Generator</title>
+    <meta name="description" content="Squarespace Gradient Button Generator - Create beautiful gradient buttons for your Squarespace website">
+    
+    <title>Squarespace Gradient Button Generator</title>
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Widget Styles -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Optional: Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Optional: Open Graph tags for better social sharing -->
+    <meta property="og:title" content="Squarespace Gradient Button Generator">
+    <meta property="og:description" content="Create beautiful gradient buttons for your Squarespace website">
+    <meta property="og:type" content="website">
 </head>
 <body>
-    <div id="gradient-button-generator"></div>
+    <!-- Page Header -->
+    <header>
+        <h1>Squarespace Gradient Button Generator</h1>
+        <p>Create beautiful gradient buttons for your Squarespace website. Just customize, copy, and paste!</p>
+    </header>
+
+    <!-- Widget Container -->
+    <main>
+        <div id="gradient-button-generator"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Created by <a href="https://luxwebsitetemplates.com" target="_blank" rel="noopener noreferrer">Lux Website Templates</a></p>
+    </footer>
+
+    <!-- Widget Script -->
     <script src="widget.js"></script>
+
+    <!-- Initialize Widget -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            if (typeof window.initGradientGenerator === 'function') {
-                window.initGradientGenerator('gradient-text-generator');
+            if (typeof window.initGradientButtonGenerator === 'function') {
+                window.initGradientButtonGenerator('gradient-button-generator');
+            } else {
+                console.error('Gradient Button Generator widget failed to load');
             }
         });
     </script>
+
+    <!-- Optional: Basic page styles -->
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            color: #333;
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: #666;
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem 0;
+            color: #666;
+            font-family: 'Noto Sans', sans-serif;
+        }
+
+        footer a {
+            color: #4361EE;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+        }
+    </style>
 </body>
 </html>
