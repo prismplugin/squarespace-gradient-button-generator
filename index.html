@@ -44,8 +44,16 @@
     <!-- Initialize Widget -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            console.log('initGradientButtonGenerator available:', !!window.initGradientButtonGenerator);
+            
             if (typeof window.initGradientButtonGenerator === 'function') {
-                window.initGradientButtonGenerator('gradient-button-generator');
+                try {
+                    window.initGradientButtonGenerator('gradient-button-generator');
+                    console.log('Widget initialization attempted');
+                } catch (error) {
+                    console.error('Error during widget initialization:', error);
+                }
             } else {
                 console.error('Gradient Button Generator widget failed to load');
             }
