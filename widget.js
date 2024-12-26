@@ -1099,13 +1099,13 @@ ${selector}:hover {
             return;
         }
 
-        // Create widget container
-        const widget = utils.dom.createElement('div');
-        widget.id = widgetId;
-        widget.innerHTML = generateWidgetHTML();
-        target.appendChild(widget);
-
         try {
+            // Create widget container
+            const widget = utils.dom.createElement('div');
+            widget.id = widgetId;
+            widget.innerHTML = generateWidgetHTML();
+            target.appendChild(widget);
+
             // Initialize all components
             initializers.initColorSwatches();
             initializers.initGradientInputs();
@@ -1131,5 +1131,4 @@ ${selector}:hover {
 
     // Make widget initialization function globally available
     window.initGradientButtonGenerator = initGradientButtonGenerator;
-})();
 })();
