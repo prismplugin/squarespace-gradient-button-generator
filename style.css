@@ -148,6 +148,8 @@ body {
 /* Input Controls */
 .gbg-input-group {
   margin-bottom: 16px;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .gbg-input-label {
@@ -292,6 +294,8 @@ body {
   display: flex;
   gap: 16px;
   margin-bottom: 16px;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .gbg-compact-group .gbg-input-group {
