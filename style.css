@@ -11,7 +11,23 @@
     padding: 20px;
     font-family: 'Noto Sans', Arial, sans-serif !important;
     color: #e0e0e0;
-    width: 100% !important; /* Ensure full width */
+    width: 100% !important; 
+    box-sizing: border-box !important;
+}
+
+#gradient-button-generator {
+    min-width: 430px !important; /* Minimum width to prevent content squishing */
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+body {
+    min-width: 430px !important; /* Match widget min-width */
+    overflow-x: auto !important; /* Allow scrolling only when below minimum width */
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* Center widget */
 }
 
 /* Color Swatches Sidebar */
@@ -335,6 +351,14 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1040px) { /* 1000px + 40px for padding */
+    #gradient-button-generator,
+    #gradient-button-generator > div[id^="gradient-button-"] {
+        margin: 20px !important;
+        width: calc(100% - 40px) !important; /* Account for margins */
+    }
+}
+
 @media (max-width: 768px) {
     #gradient-button-generator,
     #gradient-button-generator > div[id^="gradient-button-"] {
@@ -344,6 +368,7 @@
 
     .gbg-color-swatches {
     width: 100%;
+    flex: none !important;
     margin-bottom: 0;
     }
 
