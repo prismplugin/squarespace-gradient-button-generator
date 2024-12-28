@@ -13,11 +13,6 @@
   color: #e0e0e0;
 }
 
-/* Ensure all elements within use Noto Sans */
-#gradient-button-generator * {
-  font-family: 'Noto Sans', Arial, sans-serif !important;
-}
-
 /* Color Swatches Sidebar */
 .gbg-color-swatches {
   width: 140px;
