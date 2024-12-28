@@ -135,6 +135,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   max-width: calc(100% - 152px);
+  overflow: visible !important;
 }
 
 .gbg-tool-title {
@@ -341,6 +342,7 @@ body {
 
 /* Output Area */
 #gbg-output {
+    display: block !important; /* Ensure proper block display */
     width: 100% !important;
     height: 200px !important;
     margin-top: 24px !important;
@@ -351,17 +353,20 @@ body {
     color: #e0e0e0 !important;
     font-family: monospace !important;
     font-size: 14px !important;
-    grid-column: 1 / -1 !important;
     box-sizing: border-box !important;
-    resize: vertical !important; /* Allows vertical resizing only */
-    min-height: 100px !important; /* Minimum height when resizing */
-    max-height: 400px !important; /* Maximum height when resizing */
-    overflow-y: auto !important; /* Adds vertical scrollbar when needed */
-    outline: none !important; /* Removes default focus outline */
+    resize: vertical !important;
+    min-height: 100px !important;
+    max-height: 500px !important;
+    overflow: auto !important;
+    outline: none !important;
 }
 
 #gbg-output:focus {
     border-color: #4361EE !important; /* Highlight border when focused */
+}
+
+#gbg-output::-webkit-resizer {
+    background-color: #4361EE !important; /* Style the resize handle */
 }
 
 /* Responsive Design */
@@ -394,6 +399,9 @@ body {
 
     .gbg-color-category {
         margin-bottom: 12px !important;
+        
+     #gbg-output {
+        margin-bottom: 20px !important; /* Add space at bottom for resize handle */
     }
 }
 
@@ -412,18 +420,18 @@ body {
 }
 
 @media (max-width: 480px) {
-  .gbg-swatches-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  .gbg-compact-group {
-    flex-direction: column;
+    .gbg-swatches-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+    
+    .gbg-compact-group {
+        flex-direction: column !important;
+    }
 
-   .gbg-color-swatches {
+    .gbg-color-swatches {
         padding: 15px !important;
         padding-bottom: 8px !important;
     }
-  }
 }
 
 
