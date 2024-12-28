@@ -358,6 +358,7 @@ body {
     #gradient-button-generator > div[id^="gradient-button-"] {
         flex-direction: column !important;
         gap: 16px !important;
+        padding: 0px !important;
     }
 
     .gbg-color-swatches {
