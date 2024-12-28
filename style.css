@@ -343,9 +343,13 @@
     }
 
     .gbg-color-swatches {
-        width: 100% !important;
-        flex: none !important;
+    width: 100%;
+    margin-bottom: 0;
     }
+
+    .gbg-swatches-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
 
     .gbg-main-content {
         max-width: 100% !important;
@@ -356,19 +360,6 @@
   #gradient-button-generator {
     flex-direction: column;
     gap: 16px;
-  }
-
-  .gbg-color-swatches {
-    width: 100%;
-    margin-bottom: 0;
-  }
-
-  .gbg-main-content {
-    max-width: 100%;
-  }
-  
-  .gbg-swatches-grid {
-    grid-template-columns: repeat(6, 1fr);
   }
 
   .gbg-gradient-colors-grid,
