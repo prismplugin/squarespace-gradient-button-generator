@@ -2,20 +2,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&display=swap');
 
 /* Base Container */
-#gradient-button-generator {
-  max-width: 1000px;
-  min-width:600px;
-  margin: 20px auto !important;
-  display: flex;
-  gap: 12px;
-  padding: 20px;
-  font-family: 'Noto Sans', Arial, sans-serif !important;
-  color: #e0e0e0;
+#gradient-button-generator,
+#gradient-button-generator > div[id^="gradient-button-"] {
+    max-width: 1000px;
+    margin: 20px auto !important;
+    display: flex !important; /* Force flex display */
+    gap: 12px !important;
+    padding: 20px;
+    font-family: 'Noto Sans', Arial, sans-serif !important;
+    color: #e0e0e0;
+    width: 100% !important; /* Ensure full width */
 }
 
 /* Color Swatches Sidebar */
 .gbg-color-swatches {
   width: 140px;
+  flex: 0 0 140px !important; /* Force fixed width */
   background-color: #1a1a1a !important;
   padding: 10px;
   border-radius: 8px;
@@ -109,7 +111,8 @@
 
 /* Main Content Area */
 .gbg-main-content {
-  flex: 1;
+  flex: 1 1 auto !important; /* Allow flexible growth */
+  min-width: 0 !important;
   background-color: #1a1a1a !important;
   padding: 20px;
   border-radius: 8px;
@@ -332,6 +335,23 @@
 }
 
 /* Responsive Design */
+@media (max-width: 768px) {
+    #gradient-button-generator,
+    #gradient-button-generator > div[id^="gradient-button-"] {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .gbg-color-swatches {
+        width: 100% !important;
+        flex: none !important;
+    }
+
+    .gbg-main-content {
+        max-width: 100% !important;
+    }
+}
+
 @media (max-width: 600px) {
   #gradient-button-generator {
     flex-direction: column;
