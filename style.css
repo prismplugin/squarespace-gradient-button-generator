@@ -419,9 +419,7 @@ body {
         grid-template-columns: 1fr !important;
         gap: 12px !important;
     }
-}
 
-@media (max-width: 480px) {
     .gbg-swatches-grid {
         grid-template-columns: repeat(3, 1fr) !important;
     }
