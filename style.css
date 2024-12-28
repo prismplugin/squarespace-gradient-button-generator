@@ -429,6 +429,10 @@ body {
     .gbg-compact-group {
         flex-direction: column !important;
     }
+    
+    .gbg-input-group {
+        flex-direction: column !important;
+    }
 
     .gbg-color-swatches {
         padding: 15px !important;
