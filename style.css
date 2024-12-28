@@ -71,6 +71,7 @@ body {
   cursor: pointer;
   transition: transform 0.2s;
   height: 24px;
+  box-sizing: border-box !important;
 }
 
 .gbg-color-swatch:hover {
