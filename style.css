@@ -4,6 +4,7 @@
 /* Base Container */
 #gradient-button-generator {
   max-width: 1000px;
+  min-width:600px;
   margin: 20px auto !important;
   display: flex;
   gap: 12px;
