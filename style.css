@@ -39,6 +39,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   height: fit-content;
+  box-sizing: border-box !important;
 }
 
 .gbg-color-category {
@@ -357,14 +358,14 @@ body {
     #gradient-button-generator > div[id^="gradient-button-"] {
         flex-direction: column !important;
         gap: 16px !important;
-        padding: 10px !important;
     }
 
     .gbg-color-swatches {
     width: 100%;
     flex: none !important;
     margin-bottom: 0;
-    padding: 10px !important;
+    padding: 20px !important;
+    padding-bottom: 10px !important;
     }
 
     .gbg-swatches-grid {
@@ -374,6 +375,10 @@ body {
     .gbg-main-content {
         max-width: 100% !important;
         width: 100% !important;
+        box-sizing: border-box !important;
+
+    .gbg-color-category {
+        margin-bottom: 12px !important;
     }
 }
 
@@ -398,6 +403,11 @@ body {
   
   .gbg-compact-group {
     flex-direction: column;
+
+   .gbg-color-swatches {
+        padding: 15px !important;
+        padding-bottom: 8px !important;
+    }
   }
 }
 
