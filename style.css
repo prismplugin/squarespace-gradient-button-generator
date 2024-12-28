@@ -135,6 +135,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   max-width: calc(100% - 152px);
+  overflow: hidden !important;
 }
 
 .gbg-tool-title {
@@ -341,18 +342,27 @@ body {
 
 /* Output Area */
 #gbg-output {
-  width: 100%;
-  box-sizing: border-box !important;
-  height: 200px;
-  margin-top: 24px;
-  background-color: #2b2b2b !important;
-  border: 1px solid #444;
-  border-radius: 4px;
-  padding: 12px;
-  color: #e0e0e0;
-  font-family: monospace !important;
-  font-size: 14px;
-  grid-column: 1 / -1;
+    width: 100% !important;
+    height: 200px !important;
+    margin-top: 24px !important;
+    background-color: #2b2b2b !important;
+    border: 1px solid #444 !important;
+    border-radius: 4px !important;
+    padding: 12px !important;
+    color: #e0e0e0 !important;
+    font-family: monospace !important;
+    font-size: 14px !important;
+    grid-column: 1 / -1 !important;
+    box-sizing: border-box !important;
+    resize: vertical !important; /* Allows vertical resizing only */
+    min-height: 100px !important; /* Minimum height when resizing */
+    max-height: 400px !important; /* Maximum height when resizing */
+    overflow-y: auto !important; /* Adds vertical scrollbar when needed */
+    outline: none !important; /* Removes default focus outline */
+}
+
+#gbg-output:focus {
+    border-color: #4361EE !important; /* Highlight border when focused */
 }
 
 /* Responsive Design */
