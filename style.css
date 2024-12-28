@@ -370,7 +370,6 @@ body {
 }
 
 /* Responsive Design */
-
 @media (max-width: 768px) {
     #gradient-button-generator,
     #gradient-button-generator > div[id^="gradient-button-"] {
@@ -381,42 +380,40 @@ body {
     }
 
     .gbg-color-swatches {
-    width: 100%;
-    flex: none !important;
-    margin-bottom: 0;
-    padding: 20px !important;
-    padding-bottom: 10px !important;
+        width: 100% !important;
+        flex: none !important;
+        margin-bottom: 0 !important;
+        padding: 20px !important;
+        padding-bottom: 10px !important;
     }
 
     .gbg-swatches-grid {
-    grid-template-columns: repeat(6, 1fr);
-  }
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
 
     .gbg-main-content {
         max-width: 100% !important;
         width: 100% !important;
         box-sizing: border-box !important;
+    }
 
     .gbg-color-category {
         margin-bottom: 12px !important;
-        
-     #gbg-output {
-        margin-bottom: 20px !important; /* Add space at bottom for resize handle */
     }
 }
 
 @media (max-width: 600px) {
-  #gradient-button-generator {
-    flex-direction: column;
-    gap: 16px;
-  }
+    #gradient-button-generator {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
 
-  .gbg-gradient-colors-grid,
-  .gbg-unified-grid,
-  .gbg-two-columns {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
+    .gbg-gradient-colors-grid,
+    .gbg-unified-grid,
+    .gbg-two-columns {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
 }
 
 @media (max-width: 480px) {
