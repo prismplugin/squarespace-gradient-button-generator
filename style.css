@@ -357,12 +357,14 @@ body {
     #gradient-button-generator > div[id^="gradient-button-"] {
         flex-direction: column !important;
         gap: 16px !important;
+        padding: 10px !important;
     }
 
     .gbg-color-swatches {
     width: 100%;
     flex: none !important;
     margin-bottom: 0;
+    padding: 10px !important;
     }
 
     .gbg-swatches-grid {
@@ -371,6 +373,7 @@ body {
 
     .gbg-main-content {
         max-width: 100% !important;
+        width: 100% !important;
     }
 }
 
