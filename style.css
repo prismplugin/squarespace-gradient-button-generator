@@ -155,30 +155,6 @@ body {
     min-height: 24px; /* Maintain height even when empty */
 }
 
-/* Copy Colors Button */
-.gbg-copy-colors {
-    position: absolute;
-    right: 4px;
-    top: 4px;
-    background: rgba(0, 0, 0, 0.5);
-    border: none;
-    border-radius: 3px;
-    padding: 2px 6px;
-    color: white;
-    font-size: 11px;
-    opacity: 0;
-    transition: opacity 0.2s;
-    cursor: pointer;
-}
-
-.gbg-color-swatch:hover .gbg-copy-colors {
-    opacity: 1;
-}
-
-.gbg-copy-colors:hover {
-    background: rgba(0, 0, 0, 0.7);
-}
-
 /* Input Controls */
 .gbg-input-group {
   margin-bottom: 16px;
