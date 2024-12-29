@@ -332,10 +332,6 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.gbg-generate-button {
-  background: linear-gradient(to right, #5e60ce, #4ea8de);
-}
-
 .gbg-copy-button {
   background: linear-gradient(to right, #4361EE, #1F43ED);
 }
@@ -345,7 +341,7 @@ body {
 }
 
 .gbg-action-button:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
