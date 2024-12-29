@@ -70,13 +70,15 @@ body {
   border: 1px solid #333;
   border-radius: 4px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s,
+  box-shadow 0.2s;
   height: 24px;
 }
 
 .gbg-color-swatch:hover {
   transform: scale(1.1);
-  z-index: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
   border-color: #666;
 }
 
@@ -94,10 +96,12 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s, visibility 0.2s;
-  white-space: nowrap;
+  white-space: pre-wrap;
   pointer-events: none;
   z-index: 10;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  font-family: 'Noto Sans', monospace;
+  font-size: 12px;
 }
 
 .gbg-color-swatch:hover .gbg-swatch-tooltip {
@@ -144,6 +148,35 @@ body {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 24px;
+}
+
+#gbg-recent-gradients {
+    margin-bottom: 20px;
+    min-height: 24px; /* Maintain height even when empty */
+}
+
+/* Copy Colors Button */
+.gbg-copy-colors {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 3px;
+    padding: 2px 6px;
+    color: white;
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.gbg-color-swatch:hover .gbg-copy-colors {
+    opacity: 1;
+}
+
+.gbg-copy-colors:hover {
+    background: rgba(0, 0, 0, 0.7);
 }
 
 /* Input Controls */
