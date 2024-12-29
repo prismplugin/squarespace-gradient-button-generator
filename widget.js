@@ -70,6 +70,7 @@ const COLOR_SWATCHES = {
             { name: 'Sunset', values: ['#ff6a00', '#ee0979'] },
             { name: 'Forest', values: ['#00b09b', '#96c93d'] },
             { name: 'Midnight', values: ['#232526', '#414345'] }
+            { name: 'Smooth', values: ['#5e60ce', '#4ea8de'] }
         ]
     };
 
