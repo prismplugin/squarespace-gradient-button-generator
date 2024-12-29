@@ -24,12 +24,6 @@
 
 // Update the COLOR_SWATCHES with new Popular category
 const COLOR_SWATCHES = {
-    Popular: [
-        { name: 'Professional Blue', values: ['#4EA8DE', '#6C63FF'] },
-        { name: 'Warm Sunset', values: ['#FF6B6B', '#FF8E53'] },
-        { name: 'Nature Green', values: ['#36B37E', '#00875A'] },
-        { name: 'Ocean Breeze', values: ['#48c6ef', '#6f86d6'] }
-    ],
     Basics: [
         { name: 'Pure White', value: '#FFFFFF' },
         { name: 'Snow White', value: '#F5F5F5' },
