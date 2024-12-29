@@ -6,40 +6,46 @@
 
     // Widget Configuration
     const CONFIG = {
-        defaultColors: ['#00FF87', '#60EFFF'],
-        defaultAngle: 90,
-        defaultButtonType: 'primary',
-        maxGradientColors: 6,
-        defaults: {
-            textColor: '#EBE8E0',
-            expandOnHover: 'no',
-            gradientType: 'linear'
-        },
-        analytics: {
-            enabled: true,
-            creator: 'luxwebsitetemplates.com',
-            version: '1.0.0'
-        }
-    };
+    defaultColors: ['#4EA8DE', '#6C63FF'], // New professional default
+    defaultAngle: 90,
+    defaultButtonType: 'primary',
+    maxGradientColors: 6,
+    defaults: {
+        textColor: '#EBE8E0',
+        expandOnHover: 'no',
+        gradientType: 'linear'
+    },
+    analytics: {
+        enabled: true,
+        creator: 'luxwebsitetemplates.com',
+        version: '1.0.0'
+    }
+};
 
-    // Color swatches data
-    const COLOR_SWATCHES = {
-        Basics: [
-            { name: 'Pure White', value: '#FFFFFF' },
-            { name: 'Snow White', value: '#F5F5F5' },
-            { name: 'Light Gray', value: '#D3D3D3' },
-            { name: 'Medium Gray', value: '#808080' },
-            { name: 'Dark Gray', value: '#404040' },
-            { name: 'Pure Black', value: '#000000' }
-        ],
-        Blues: [
-            { name: 'Arctic Blue', value: '#E3F2FD' },
-            { name: 'Light Sky', value: '#87CEFA' },
-            { name: 'Dodger Blue', value: '#1E90FF' },
-            { name: 'Royal Blue', value: '#4169E1' },
-            { name: 'Navy Blue', value: '#000080' },
-            { name: 'Dark Navy', value: '#00005A' }
-        ],
+// Update the COLOR_SWATCHES with new Popular category
+const COLOR_SWATCHES = {
+    Popular: [
+        { name: 'Professional Blue', values: ['#4EA8DE', '#6C63FF'] },
+        { name: 'Warm Sunset', values: ['#FF6B6B', '#FF8E53'] },
+        { name: 'Nature Green', values: ['#36B37E', '#00875A'] },
+        { name: 'Ocean Breeze', values: ['#48c6ef', '#6f86d6'] }
+    ],
+    Basics: [
+        { name: 'Pure White', value: '#FFFFFF' },
+        { name: 'Snow White', value: '#F5F5F5' },
+        { name: 'Light Gray', value: '#D3D3D3' },
+        { name: 'Medium Gray', value: '#808080' },
+        { name: 'Dark Gray', value: '#404040' },
+        { name: 'Pure Black', value: '#000000' }
+    ],
+    Blues: [
+        { name: 'Arctic Blue', value: '#E3F2FD' },
+        { name: 'Light Sky', value: '#87CEFA' },
+        { name: 'Dodger Blue', value: '#1E90FF' },
+        { name: 'Royal Blue', value: '#4169E1' },
+        { name: 'Navy Blue', value: '#000080' },
+        { name: 'Dark Navy', value: '#00005A' }
+    ],
         Greens: [
             { name: 'Ice Mint', value: '#E0FFF0' },
             { name: 'Mint', value: '#98FF98' },
@@ -72,6 +78,43 @@
             { name: 'Midnight', values: ['#232526', '#414345'] }
         ]
     };
+
+    // Add Recently Used Gradients functionality
+const RECENT_GRADIENTS_KEY = 'recentGradients';
+
+function addToRecentGradients(colors) {
+    try {
+        let recent = JSON.parse(localStorage.getItem(RECENT_GRADIENTS_KEY) || '[]');
+        // Add new gradient to the beginning
+        recent.unshift(colors);
+        // Keep only last 5 gradients
+        recent = recent.slice(0, 5);
+        // Remove duplicates
+        recent = Array.from(new Set(recent.map(JSON.stringify))).map(JSON.parse);
+        localStorage.setItem(RECENT_GRADIENTS_KEY, JSON.stringify(recent));
+        updateRecentGradientsDisplay();
+    } catch (error) {
+        console.log('Error updating recent gradients:', error);
+    }
+}
+
+function updateRecentGradientsDisplay() {
+    try {
+        const recentContainer = document.getElementById('gbg-recent-gradients');
+        if (!recentContainer) return;
+
+        const recent = JSON.parse(localStorage.getItem(RECENT_GRADIENTS_KEY) || '[]');
+        recentContainer.innerHTML = recent.map((colors, index) => `
+            <div class="gbg-color-swatch" 
+                 style="background: linear-gradient(90deg, ${colors.join(', ')})"
+                 data-colors='${JSON.stringify(colors)}'>
+                <span class="gbg-swatch-tooltip">Recent ${index + 1}</span>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.log('Error displaying recent gradients:', error);
+    }
+}
 
     // Analytics tracking function
     function trackWidgetEvent(action, label = '') {
@@ -243,9 +286,13 @@
         colorSwatches() {
             return `
                 <div class="gbg-color-swatches">
-                    <h3 class="gbg-tool-title">Color Swatches</h3>
-                    <div id="gbg-swatches-container"></div>
-                </div>`;
+                <h3 class="gbg-tool-title">Color Swatches</h3>
+                <div class="gbg-category">
+                    <h4 class="gbg-category-title">Recent</h4>
+                    <div id="gbg-recent-gradients" class="gbg-swatches-grid"></div>
+                </div>
+                <div id="gbg-swatches-container"></div>
+            </div>`;
         },
 
         // Generate button type and block ID section
