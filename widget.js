@@ -401,6 +401,7 @@ function updateRecentGradientsDisplay() {
         actionButtons() {
             return `
                 <div class="gbg-button-row">
+                    <button class="gbg-action-button gbg-generate-button">Generate Code</button>
                     <button class="gbg-action-button gbg-copy-button">Copy Code</button>
                     <button class="gbg-action-button gbg-clear-button">Clear All</button>
                 </div>`;
@@ -581,78 +582,28 @@ function updateRecentGradientsDisplay() {
                 }
             });
 
-            
-            // Initialize button controls
-initButtonControls() {
-    // Button type change handler
-    const buttonType = document.getElementById('gbg-button-type');
-    if (buttonType) {
-        buttonType.addEventListener('change', this.updatePreview);
-    }
-
-    // Block ID input handler
-    const blockId = document.getElementById('gbg-block-id');
-    if (blockId) {
-        blockId.addEventListener('input', (e) => {
-            e.target.value = utils.formatSquarespaceId(e.target.value);
-            this.updatePreview();
-        });
-    }
-
-    // Style control handlers
-    ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.addEventListener('input', (e) => {
-                const color = utils.formatHexColor(e.target.value);
-                if (color) {
-                    e.target.style.borderColor = '#444';
-                } else {
-                    e.target.style.borderColor = '#ff4d4d';
-                }
-                this.updatePreview();
-            });
-
-            input.addEventListener('blur', (e) => {
-                const color = utils.formatHexColor(e.target.value);
-                if (color) {
-                    e.target.value = color;
-                    e.target.style.borderColor = '#444';
-                }
-            });
-        }
-    });
             // Action button handlers
-    document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
-        const copyButton = document.querySelector('.gbg-copy-button');
-        const originalText = copyButton.textContent;
-        
-        copyButton.textContent = 'Copied!';
-        setTimeout(() => {
-            copyButton.textContent = originalText;
-        }, 2000);
-        
-        navigator.clipboard.writeText(document.getElementById('gbg-output').value)
-            .then(() => trackWidgetEvent('Copy Success'))
-            .catch(() => {
-                // Fallback
-                const output = document.getElementById('gbg-output');
-                output.select();
-                document.execCommand('copy');
-                trackWidgetEvent('Copy Fallback');
+            document.querySelector('.gbg-generate-button')?.addEventListener('click', () => {
+                generator.generateCSS();
+                trackWidgetEvent('Generate Code');
             });
-    });
 
-    document.querySelector('.gbg-clear-button')?.addEventListener('click', () => {
-        actions.clearFields();
-        trackWidgetEvent('Clear Fields');
-    });
-},
+            document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
+                actions.copyToClipboard();
+                trackWidgetEvent('Copy Code');
+            });
 
-// Initialize preview updating
-updatePreview() {
-    generator.generateCSS();
-}
+            document.querySelector('.gbg-clear-button')?.addEventListener('click', () => {
+                actions.clearFields();
+                trackWidgetEvent('Clear Fields');
+            });
+        },
+
+        // Initialize preview updating
+        updatePreview() {
+            generator.generateCSS();
+        }
+    };
 
     // Event Handlers
     const handlers = {
