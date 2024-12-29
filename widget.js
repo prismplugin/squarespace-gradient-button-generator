@@ -401,7 +401,6 @@ function updateRecentGradientsDisplay() {
         actionButtons() {
             return `
                 <div class="gbg-button-row">
-                    <button class="gbg-action-button gbg-generate-button">Generate Code</button>
                     <button class="gbg-action-button gbg-copy-button">Copy Code</button>
                     <button class="gbg-action-button gbg-clear-button">Clear All</button>
                 </div>`;
@@ -582,11 +581,7 @@ function updateRecentGradientsDisplay() {
                 }
             });
 
-            // Action button handlers
-            document.querySelector('.gbg-generate-button')?.addEventListener('click', () => {
-                generator.generateCSS();
-                trackWidgetEvent('Generate Code');
-            });
+    
 
             document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
                 actions.copyToClipboard();
