@@ -69,7 +69,7 @@ const COLOR_SWATCHES = {
             { name: 'Purple Dream', values: ['#c471f5', '#fa71cd'] },
             { name: 'Sunset', values: ['#ff6a00', '#ee0979'] },
             { name: 'Forest', values: ['#00b09b', '#96c93d'] },
-            { name: 'Midnight', values: ['#232526', '#414345'] }
+            { name: 'Midnight', values: ['#232526', '#414345'] },
             { name: 'Smooth', values: ['#5e60ce', '#4ea8de'] }
         ]
     };
