@@ -329,11 +329,13 @@ body {
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease-in-out; /* Changed to include all properties */
+  min-width: 100px;
 }
 
 .gbg-copy-button {
   background: linear-gradient(to right, #4361EE, #1F43ED);
+  position: relative; /* Add this for better hover handling */
 }
 
 .gbg-clear-button {
@@ -341,8 +343,13 @@ body {
 }
 
 .gbg-action-button:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px); /* Subtle lift instead of scale */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.gbg-action-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Output Area */
