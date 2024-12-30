@@ -649,12 +649,6 @@ const initializers = {
         });
     },
 
-    // Initialize preview updating
-    updatePreview() {
-        generator.generateCSS();
-    }
-};
-
         // Initialize angle controls
         initAngleControls() {
             const slider = document.getElementById('gbg-angle-slider');
@@ -764,6 +758,7 @@ updatePreview() {
     generator.generateCSS();
 }
     };
+    
 
     // Event Handlers
     const handlers = {
