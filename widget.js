@@ -1203,6 +1203,8 @@ ${selector}:hover {
             initializers.initGradientInputs();
             initializers.initAngleControls();
             initializers.initButtonControls();
+            initializers.initializeColorInputs();
+            
 
             // Set up event listeners for swatches
             const swatchesContainer = document.getElementById('gbg-swatches-container');
@@ -1219,6 +1221,8 @@ ${selector}:hover {
         } catch (error) {
             utils.debug.error('Error initializing widget:', error);
         }
+
+        
     }
 
     // Make widget initialization function globally available
