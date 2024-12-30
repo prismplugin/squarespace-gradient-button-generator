@@ -700,7 +700,6 @@ function initializeColorInputs() {
             });
         }
     });
-}
 
         // Input field handlers
         inputField: {
