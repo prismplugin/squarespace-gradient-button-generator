@@ -22,7 +22,7 @@
     }
 };
 
-// Update the COLOR_SWATCHES with new Popular category
+// Update the COLOR_SWATCHES
 const COLOR_SWATCHES = {
     Basics: [
         { name: 'Pure White', value: '#FFFFFF' },
@@ -74,6 +74,9 @@ const COLOR_SWATCHES = {
         ]
     };
 
+    
+let currentlyFocusedInput = null;
+  
     // Add Recently Used Gradients functionality
 const RECENT_GRADIENTS_KEY = 'recentGradients';
 
@@ -616,50 +619,88 @@ updatePreview() {
 
     // Event Handlers
     const handlers = {
-        // Color swatch interaction handlers
-        colorSwatch: {
-            handleClick(event) {
-                const swatch = event.target.closest('.gbg-color-swatch');
-                if (!swatch) return;
+    colorSwatch: {
+        handleClick(event) {
+            const swatch = event.target.closest('.gbg-color-swatch');
+            if (!swatch) return;
 
-                // Handle gradient swatches
-                if (swatch.dataset.colors) {
-                    const colors = JSON.parse(swatch.dataset.colors);
-                    colors.forEach((color, index) => {
-                        const input = document.getElementById(`gbg-gradient-color-${index}`);
-                        if (input) {
-                            input.value = color;
-                            input.style.borderColor = '#444';
-                        }
-                    });
-                    trackWidgetEvent('Apply Gradient Preset');
-                } 
-                // Handle single color swatches
-                else if (swatch.dataset.color) {
-                    // Find first empty gradient color input
+            // Handle gradient swatches
+            if (swatch.dataset.colors) {
+                const colors = JSON.parse(swatch.dataset.colors);
+                colors.forEach((color, index) => {
+                    const input = document.getElementById(`gbg-gradient-color-${index}`);
+                    if (input) {
+                        input.value = color;
+                        input.style.borderColor = '#444';
+                    }
+                });
+                trackWidgetEvent('Apply Gradient Preset');
+            } 
+            // Handle single color swatches
+            else if (swatch.dataset.color) {
+                const color = swatch.dataset.color;
+                
+                // If we have a focused input, update it
+                if (currentlyFocusedInput && ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].includes(currentlyFocusedInput.id)) {
+                    currentlyFocusedInput.value = color;
+                    currentlyFocusedInput.style.borderColor = '#444';
+                    trackWidgetEvent('Apply Color to Field', currentlyFocusedInput.id);
+                } else {
+                    // Original behavior for gradient color inputs
                     const inputs = Array.from({ length: CONFIG.maxGradientColors }, (_, i) => 
                         document.getElementById(`gbg-gradient-color-${i}`));
                     
                     const emptyInput = inputs.find(input => !input.value.trim());
                     if (emptyInput) {
-                        emptyInput.value = swatch.dataset.color;
+                        emptyInput.value = color;
                         emptyInput.style.borderColor = '#444';
                         trackWidgetEvent('Apply Single Color');
                     }
                 }
-
-                generator.generateCSS();
-            },
-
-            handleDragStart(event) {
-                const swatch = event.target.closest('.gbg-color-swatch');
-                if (!swatch) return;
-
-                event.dataTransfer.setData('text/plain', 
-                    swatch.dataset.color || JSON.stringify(swatch.dataset.colors));
-                event.dataTransfer.effectAllowed = 'copy';
             }
-        },
+
+            generator.generateCSS();
+        }
+    }
+};
+
+// Add a new function to initialize color input focus tracking
+function initializeColorInputs() {
+    const colorInputIds = [
+        'gbg-text-color',
+        'gbg-border-color',
+        'gbg-shadow-color'
+    ];
+
+    colorInputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            // Add focus event
+            input.addEventListener('focus', () => {
+                currentlyFocusedInput = input;
+                // Add visual feedback class
+                input.classList.add('color-input-focused');
+            });
+
+            // Add blur event
+            input.addEventListener('blur', () => {
+                if (currentlyFocusedInput === input) {
+                    currentlyFocusedInput = null;
+                }
+                input.classList.remove('color-input-focused');
+            });
+
+            // Add placeholder text to help users
+            const originalPlaceholder = input.placeholder;
+            input.addEventListener('focus', () => {
+                input.placeholder = 'Click a color swatch or enter hex code...';
+            });
+            input.addEventListener('blur', () => {
+                input.placeholder = originalPlaceholder;
+            });
+        }
+    });
+}
 
         // Input field handlers
         inputField: {
@@ -796,7 +837,7 @@ updatePreview() {
         // Get all current gradient colors
         getGradientColors() {
             const colors = [];
-            for (let i = 0; i < CONFIG.maxGradientColors; i++) {
+            for ( i = 0; i < CONFIG.maxGradientColors; i++) {
                 const colorValue = utils.dom.getInputValue(`gbg-gradient-color-${i}`);
                 if (colorValue) {
                     const formattedColor = utils.formatHexColor(colorValue);
@@ -870,7 +911,7 @@ updatePreview() {
             return styles.join(';\n    ');
         },
 
-        // Generate the complete CSS code
+        // Generate the compe CSS code
         generateCSS() {
             // Get basic setup
             const buttonType = utils.dom.getInputValue('gbg-button-type', CONFIG.defaultButtonType);
