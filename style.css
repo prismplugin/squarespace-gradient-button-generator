@@ -178,6 +178,28 @@ body {
   font-size: 14px;
 }
 
+.color-input-focused {
+    border-color: #4361EE !important;
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.3) !important;
+}
+
+/* Add a subtle animation to color swatches when an input is focused */
+.color-input-focused ~ .gbg-color-swatches .gbg-color-swatch:not([data-colors]) {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 /* Grid Layouts */
 .gbg-gradient-colors-grid,
 .gbg-unified-grid,
