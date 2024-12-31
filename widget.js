@@ -611,13 +611,6 @@ const initializers = {
         });
     },
 
-    // Initialize color inputs
-    initializeColorInputs() {
-        const colorInputIds = [
-            'gbg-text-color',
-            'gbg-border-color',
-            'gbg-shadow-color'
-        ];
 
         colorInputIds.forEach(id => {
             const input = document.getElementById(id);
@@ -649,58 +642,6 @@ const initializers = {
         });
     },
 
-        // Initialize angle controls
-        initAngleControls() {
-            const slider = document.getElementById('gbg-angle-slider');
-            const number = document.getElementById('gbg-angle-number');
-            
-            if (!slider || !number) {
-                utils.debug.error('Angle controls not found');
-                return;
-            }
-
-            // Sync slider and number input
-            slider.addEventListener('input', (e) => {
-                number.value = utils.validateInputs.angle(e.target.value);
-                this.updatePreview();
-            });
-
-            number.addEventListener('input', (e) => {
-                const validAngle = utils.validateInputs.angle(e.target.value);
-                slider.value = validAngle;
-                e.target.value = validAngle;
-                this.updatePreview();
-            });
-
-            // Handle gradient type changes
-            const radios = document.querySelectorAll('input[name="gradientType"]');
-            radios.forEach(radio => {
-                radio.addEventListener('change', () => {
-                    const angleControl = document.getElementById('gbg-angle-control');
-                    if (angleControl) {
-                        angleControl.style.display = radio.value === 'linear' ? 'block' : 'none';
-                    }
-                    this.updatePreview();
-                });
-            });
-        },
-
-        // Initialize button controls
-initButtonControls() {
-    // Button type change handler
-    const buttonType = document.getElementById('gbg-button-type');
-    if (buttonType) {
-        buttonType.addEventListener('change', this.updatePreview);
-    }
-
-    // Block ID input handler
-    const blockId = document.getElementById('gbg-block-id');
-    if (blockId) {
-        blockId.addEventListener('input', (e) => {
-            e.target.value = utils.formatSquarespaceId(e.target.value);
-            this.updatePreview();
-        });
-    }
 
     // Style control handlers
     ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
