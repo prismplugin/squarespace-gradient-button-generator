@@ -612,37 +612,6 @@ const initializers = {
     },
 
 
-        colorInputIds.forEach(id => {
-            const input = document.getElementById(id);
-            if (input) {
-                // Add focus event
-                input.addEventListener('focus', () => {
-                    currentlyFocusedInput = input;
-                    // Add visual feedback class
-                    input.classList.add('color-input-focused');
-                });
-
-                // Add blur event
-                input.addEventListener('blur', () => {
-                    if (currentlyFocusedInput === input) {
-                        currentlyFocusedInput = null;
-                    }
-                    input.classList.remove('color-input-focused');
-                });
-
-                // Add placeholder text to help users
-                const originalPlaceholder = input.placeholder;
-                input.addEventListener('focus', () => {
-                    input.placeholder = 'Click a color swatch or enter hex code...';
-                });
-                input.addEventListener('blur', () => {
-                    input.placeholder = originalPlaceholder;
-                });
-            }
-        });
-    },
-
-
     // Style control handlers
     ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
         const input = document.getElementById(id);
