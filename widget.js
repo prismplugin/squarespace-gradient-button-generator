@@ -749,41 +749,37 @@ updatePreview() {
 };
 
 // Add a new function to initialize color input focus tracking
-function initializeColorInputs() {
-    const colorInputIds = [
-        'gbg-text-color',
-        'gbg-border-color',
-        'gbg-shadow-color'
-    ];
+initializeColorInputs() {
+        const colorInputIds = [
+            'gbg-text-color',
+            'gbg-border-color',
+            'gbg-shadow-color'
+        ];
 
-    colorInputIds.forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            // Add focus event
-            input.addEventListener('focus', () => {
-                currentlyFocusedInput = input;
-                // Add visual feedback class
-                input.classList.add('color-input-focused');
-            });
+        colorInputIds.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('focus', () => {
+                    currentlyFocusedInput = input;
+                    input.classList.add('color-input-focused');
+                });
 
-            // Add blur event
-            input.addEventListener('blur', () => {
-                if (currentlyFocusedInput === input) {
-                    currentlyFocusedInput = null;
-                }
-                input.classList.remove('color-input-focused');
-            });
+                input.addEventListener('blur', () => {
+                    if (currentlyFocusedInput === input) {
+                        currentlyFocusedInput = null;
+                    }
+                    input.classList.remove('color-input-focused');
+                });
 
-            // Add placeholder text to help users
-            const originalPlaceholder = input.placeholder;
-            input.addEventListener('focus', () => {
-                input.placeholder = 'Click a color swatch or enter hex code...';
-            });
-            input.addEventListener('blur', () => {
-                input.placeholder = originalPlaceholder;
-            });
-        }
-    });
+                const originalPlaceholder = input.placeholder;
+                input.addEventListener('focus', () => {
+                    input.placeholder = 'Click a color swatch or enter hex code...';
+                });
+                input.addEventListener('blur', () => {
+                    input.placeholder = originalPlaceholder;
+                });
+            }
+        });
 
         // Input field handlers
         inputField: {
