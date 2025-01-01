@@ -748,7 +748,13 @@ initializeColorInputs() {
                     input.placeholder = originalPlaceholder;
                 });
             }
-        });
+       });
+    },
+
+    // Initialize preview updating
+    updatePreview() {
+        generator.generateCSS();
+    }
 
         // Input field handlers
         inputField: {
