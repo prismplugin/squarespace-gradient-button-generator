@@ -623,39 +623,6 @@ const initializers = {
     updatePreview() {
         generator.generateCSS();
     }
-
-    // Action button handlers
-    document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
-        const copyButton = document.querySelector('.gbg-copy-button');
-        const originalText = copyButton.textContent;
-        
-        copyButton.textContent = 'Copied!';
-        setTimeout(() => {
-            copyButton.textContent = originalText;
-        }, 2000);
-        
-        navigator.clipboard.writeText(document.getElementById('gbg-output').value)
-            .then(() => trackWidgetEvent('Copy Success'))
-            .catch(() => {
-                // Fallback
-                const output = document.getElementById('gbg-output');
-                output.select();
-                document.execCommand('copy');
-                trackWidgetEvent('Copy Fallback');
-            });
-    });
-
-    document.querySelector('.gbg-clear-button')?.addEventListener('click', () => {
-        actions.clearFields();
-        trackWidgetEvent('Clear Fields');
-    });
-},
-
-// Initialize preview updating
-updatePreview() {
-    generator.generateCSS();
-}
-    };
     
 
     // Event Handlers
