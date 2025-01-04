@@ -624,30 +624,6 @@ const initializers = {
         generator.generateCSS();
     }
 
-         // Style control handlers
-    ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.addEventListener('input', (e) => {
-                const color = utils.formatHexColor(e.target.value);
-                if (color) {
-                    e.target.style.borderColor = '#444';
-                } else {
-                    e.target.style.borderColor = '#ff4d4d';
-                }
-                this.updatePreview();
-            });
-
-            input.addEventListener('blur', (e) => {
-                const color = utils.formatHexColor(e.target.value);
-                if (color) {
-                    e.target.value = color;
-                    e.target.style.borderColor = '#444';
-                }
-            });
-        }
-    });
-
     // Action button handlers
     document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
         const copyButton = document.querySelector('.gbg-copy-button');
