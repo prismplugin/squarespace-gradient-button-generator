@@ -622,7 +622,8 @@ const initializers = {
     // Initialize preview updating
     updatePreview() {
         generator.generateCSS();
-    }
+     }
+};
     
 
     // Event Handlers
