@@ -558,10 +558,35 @@ const initializers = {
                 e.target.value = utils.formatSquarespaceId(e.target.value);
                 this.updatePreview();
             });
-        },
+        }
 
-    // Add a new function to initialize color input focus tracking
-initializeColorInputs() {
+        // Style control handlers
+        ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', (e) => {
+                    const color = utils.formatHexColor(e.target.value);
+                    if (color) {
+                        e.target.style.borderColor = '#444';
+                    } else {
+                        e.target.style.borderColor = '#ff4d4d';
+                    }
+                    this.updatePreview();
+                });
+
+                input.addEventListener('blur', (e) => {
+                    const color = utils.formatHexColor(e.target.value);
+                    if (color) {
+                        e.target.value = color;
+                        e.target.style.borderColor = '#444';
+                    }
+                });
+            }
+        });
+    },
+
+    // Initialize color inputs
+    initializeColorInputs() {
         const colorInputIds = [
             'gbg-text-color',
             'gbg-border-color',
@@ -591,7 +616,7 @@ initializeColorInputs() {
                     input.placeholder = originalPlaceholder;
                 });
             }
-       });
+        });
     },
 
     // Initialize preview updating
