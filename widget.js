@@ -558,61 +558,48 @@ const initializers = {
                 e.target.value = utils.formatSquarespaceId(e.target.value);
                 this.updatePreview();
             });
-        }
+        },
 
-        // Style control handlers
-        ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
+    // Add a new function to initialize color input focus tracking
+initializeColorInputs() {
+        const colorInputIds = [
+            'gbg-text-color',
+            'gbg-border-color',
+            'gbg-shadow-color'
+        ];
+
+        colorInputIds.forEach(id => {
             const input = document.getElementById(id);
             if (input) {
-                input.addEventListener('input', (e) => {
-                    const color = utils.formatHexColor(e.target.value);
-                    if (color) {
-                        e.target.style.borderColor = '#444';
-                    } else {
-                        e.target.style.borderColor = '#ff4d4d';
-                    }
-                    this.updatePreview();
+                input.addEventListener('focus', () => {
+                    currentlyFocusedInput = input;
+                    input.classList.add('color-input-focused');
                 });
 
-                input.addEventListener('blur', (e) => {
-                    const color = utils.formatHexColor(e.target.value);
-                    if (color) {
-                        e.target.value = color;
-                        e.target.style.borderColor = '#444';
+                input.addEventListener('blur', () => {
+                    if (currentlyFocusedInput === input) {
+                        currentlyFocusedInput = null;
                     }
+                    input.classList.remove('color-input-focused');
+                });
+
+                const originalPlaceholder = input.placeholder;
+                input.addEventListener('focus', () => {
+                    input.placeholder = 'Click a color swatch or enter hex code...';
+                });
+                input.addEventListener('blur', () => {
+                    input.placeholder = originalPlaceholder;
                 });
             }
-        });
-
-        // Action button handlers
-        document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
-            const copyButton = document.querySelector('.gbg-copy-button');
-            const originalText = copyButton.textContent;
-            
-            copyButton.textContent = 'Copied!';
-            setTimeout(() => {
-                copyButton.textContent = originalText;
-            }, 2000);
-            
-            navigator.clipboard.writeText(document.getElementById('gbg-output').value)
-                .then(() => trackWidgetEvent('Copy Success'))
-                .catch(() => {
-                    // Fallback
-                    const output = document.getElementById('gbg-output');
-                    output.select();
-                    document.execCommand('copy');
-                    trackWidgetEvent('Copy Fallback');
-                });
-        });
-
-        document.querySelector('.gbg-clear-button')?.addEventListener('click', () => {
-            actions.clearFields();
-            trackWidgetEvent('Clear Fields');
-        });
+       });
     },
 
+    // Initialize preview updating
+    updatePreview() {
+        generator.generateCSS();
+    }
 
-    // Style control handlers
+         // Style control handlers
     ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
         const input = document.getElementById(id);
         if (input) {
@@ -717,44 +704,6 @@ updatePreview() {
     }
 };
 
-// Add a new function to initialize color input focus tracking
-initializeColorInputs() {
-        const colorInputIds = [
-            'gbg-text-color',
-            'gbg-border-color',
-            'gbg-shadow-color'
-        ];
-
-        colorInputIds.forEach(id => {
-            const input = document.getElementById(id);
-            if (input) {
-                input.addEventListener('focus', () => {
-                    currentlyFocusedInput = input;
-                    input.classList.add('color-input-focused');
-                });
-
-                input.addEventListener('blur', () => {
-                    if (currentlyFocusedInput === input) {
-                        currentlyFocusedInput = null;
-                    }
-                    input.classList.remove('color-input-focused');
-                });
-
-                const originalPlaceholder = input.placeholder;
-                input.addEventListener('focus', () => {
-                    input.placeholder = 'Click a color swatch or enter hex code...';
-                });
-                input.addEventListener('blur', () => {
-                    input.placeholder = originalPlaceholder;
-                });
-            }
-       });
-    },
-
-    // Initialize preview updating
-    updatePreview() {
-        generator.generateCSS();
-    }
 
         // Input field handlers
         inputField: {
