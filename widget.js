@@ -74,7 +74,7 @@ const COLOR_SWATCHES = {
         ]
     };
 
-let currentlyFocusedInput = null;
+
     
     // Add Recently Used Gradients functionality
 const RECENT_GRADIENTS_KEY = 'recentGradients';
@@ -1196,6 +1196,7 @@ ${selector}:hover {
             initializers.initGradientInputs();
             initializers.initAngleControls();
             initializers.initButtonControls();
+            initializers.initializeColorInputs();
 
             // Set up event listeners for swatches
             const swatchesContainer = document.getElementById('gbg-swatches-container');
