@@ -543,7 +543,7 @@ function updateRecentGradientsDisplay() {
         },
 
 
-        function initializeColorInputs() {
+        initializeColorInputs() {
     const colorInputIds = [
         'gbg-text-color',
         'gbg-border-color',
