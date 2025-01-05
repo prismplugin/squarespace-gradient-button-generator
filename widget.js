@@ -22,7 +22,7 @@
     }
 };
 
-// Update the COLOR_SWATCHES
+// Update the COLOR_SWATCHES with new Popular category
 const COLOR_SWATCHES = {
     Basics: [
         { name: 'Pure White', value: '#FFFFFF' },
@@ -74,9 +74,6 @@ const COLOR_SWATCHES = {
         ]
     };
 
-    
-let currentlyFocusedInput = null;
-  
     // Add Recently Used Gradients functionality
 const RECENT_GRADIENTS_KEY = 'recentGradients';
 
@@ -434,245 +431,221 @@ function updateRecentGradientsDisplay() {
     }
 
     // Component Initializers
-const initializers = {
-    // Initialize color swatches
-    initColorSwatches() {
-        const container = document.getElementById('gbg-swatches-container');
-        if (!container) {
-            utils.debug.error('Color swatches container not found');
-            return;
-        }
+    const initializers = {
+        // Initialize color swatches
+        initColorSwatches() {
+            const container = document.getElementById('gbg-swatches-container');
+            if (!container) {
+                utils.debug.error('Color swatches container not found');
+                return;
+            }
 
-        Object.entries(COLOR_SWATCHES).forEach(([category, colors]) => {
-            const categoryDiv = utils.dom.createElement('div', 'gbg-color-category');
-            categoryDiv.innerHTML = `
-                <h4 class="gbg-category-title">${category}</h4>
-                <div class="gbg-swatches-grid">
-                    ${colors.map(color => {
-                        if (category === 'Gradients') {
-                            return `
-                                <div class="gbg-color-swatch" 
-                                     style="background: linear-gradient(90deg, ${color.values.join(', ')})"
-                                     data-colors='${JSON.stringify(color.values)}'>
-                                    <span class="gbg-swatch-tooltip">${color.name}</span>
-                                </div>`;
+            Object.entries(COLOR_SWATCHES).forEach(([category, colors]) => {
+                const categoryDiv = utils.dom.createElement('div', 'gbg-color-category');
+                categoryDiv.innerHTML = `
+                    <h4 class="gbg-category-title">${category}</h4>
+                    <div class="gbg-swatches-grid">
+                        ${colors.map(color => {
+                            if (category === 'Gradients') {
+                                return `
+                                    <div class="gbg-color-swatch" 
+                                         style="background: linear-gradient(90deg, ${color.values.join(', ')})"
+                                         data-colors='${JSON.stringify(color.values)}'>
+                                        <span class="gbg-swatch-tooltip">${color.name}</span>
+                                    </div>`;
+                            } else {
+                                return `
+                                    <div class="gbg-color-swatch" 
+                                         style="background-color: ${color.value}"
+                                         data-color="${color.value}">
+                                        <span class="gbg-swatch-tooltip">${color.name}</span>
+                                    </div>`;
+                            }
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(categoryDiv);
+            });
+        },
+
+        // Initialize gradient inputs
+        initGradientInputs() {
+            const container = document.getElementById('gbg-gradient-colors');
+            if (!container) {
+                utils.debug.error('Gradient colors container not found');
+                return;
+            }
+
+            // Set up color input validation and formatting
+            for (let i = 0; i < CONFIG.maxGradientColors; i++) {
+                const input = document.getElementById(`gbg-gradient-color-${i}`);
+                if (input) {
+                    input.addEventListener('input', (e) => {
+                        const color = utils.formatHexColor(e.target.value);
+                        if (color) {
+                            e.target.style.borderColor = '#444';
+                            if (utils.colorUtils.isLightColor(color)) {
+                                e.target.style.color = '#000000';
+                            }
                         } else {
-                            return `
-                                <div class="gbg-color-swatch" 
-                                     style="background-color: ${color.value}"
-                                     data-color="${color.value}">
-                                    <span class="gbg-swatch-tooltip">${color.name}</span>
-                                </div>`;
+                            e.target.style.borderColor = '#ff4d4d';
                         }
-                    }).join('')}
-                </div>
-            `;
-            container.appendChild(categoryDiv);
-        });
-    },
+                        this.updatePreview();
+                    });
 
-    // Initialize gradient inputs
-    initGradientInputs() {
-        const container = document.getElementById('gbg-gradient-colors');
-        if (!container) {
-            utils.debug.error('Gradient colors container not found');
-            return;
-        }
-
-        // Set up color input validation and formatting
-        for (let i = 0; i < CONFIG.maxGradientColors; i++) {
-            const input = document.getElementById(`gbg-gradient-color-${i}`);
-            if (input) {
-                input.addEventListener('input', (e) => {
-                    const color = utils.formatHexColor(e.target.value);
-                    if (color) {
-                        e.target.style.borderColor = '#444';
-                        if (utils.colorUtils.isLightColor(color)) {
-                            e.target.style.color = '#000000';
+                    input.addEventListener('blur', (e) => {
+                        const color = utils.formatHexColor(e.target.value);
+                        if (color) {
+                            e.target.value = color;
+                            e.target.style.borderColor = '#444';
                         }
-                    } else {
-                        e.target.style.borderColor = '#ff4d4d';
-                    }
-                    this.updatePreview();
-                });
-
-                input.addEventListener('blur', (e) => {
-                    const color = utils.formatHexColor(e.target.value);
-                    if (color) {
-                        e.target.value = color;
-                        e.target.style.borderColor = '#444';
-                    }
-                });
-            }
-        }
-    },
-
-    // Initialize angle controls
-    initAngleControls() {
-        const slider = document.getElementById('gbg-angle-slider');
-        const number = document.getElementById('gbg-angle-number');
-        
-        if (!slider || !number) {
-            utils.debug.error('Angle controls not found');
-            return;
-        }
-
-        // Sync slider and number input
-        slider.addEventListener('input', (e) => {
-            number.value = utils.validateInputs.angle(e.target.value);
-            this.updatePreview();
-        });
-
-        number.addEventListener('input', (e) => {
-            const validAngle = utils.validateInputs.angle(e.target.value);
-            slider.value = validAngle;
-            e.target.value = validAngle;
-            this.updatePreview();
-        });
-
-        // Handle gradient type changes
-        const radios = document.querySelectorAll('input[name="gradientType"]');
-        radios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                const angleControl = document.getElementById('gbg-angle-control');
-                if (angleControl) {
-                    angleControl.style.display = radio.value === 'linear' ? 'block' : 'none';
+                    });
                 }
+            }
+        },
+
+        // Initialize angle controls
+        initAngleControls() {
+            const slider = document.getElementById('gbg-angle-slider');
+            const number = document.getElementById('gbg-angle-number');
+            
+            if (!slider || !number) {
+                utils.debug.error('Angle controls not found');
+                return;
+            }
+
+            // Sync slider and number input
+            slider.addEventListener('input', (e) => {
+                number.value = utils.validateInputs.angle(e.target.value);
                 this.updatePreview();
             });
-        });
-    },
 
-    // Initialize button controls
-    initButtonControls() {
-        // Button type change handler
-        const buttonType = document.getElementById('gbg-button-type');
-        if (buttonType) {
-            buttonType.addEventListener('change', this.updatePreview);
-        }
-
-        // Block ID input handler
-        const blockId = document.getElementById('gbg-block-id');
-        if (blockId) {
-            blockId.addEventListener('input', (e) => {
-                e.target.value = utils.formatSquarespaceId(e.target.value);
+            number.addEventListener('input', (e) => {
+                const validAngle = utils.validateInputs.angle(e.target.value);
+                slider.value = validAngle;
+                e.target.value = validAngle;
                 this.updatePreview();
             });
-        }
 
-        // Style control handlers
-        ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
-            const input = document.getElementById(id);
-            if (input) {
-                input.addEventListener('input', (e) => {
-                    const color = utils.formatHexColor(e.target.value);
-                    if (color) {
-                        e.target.style.borderColor = '#444';
-                    } else {
-                        e.target.style.borderColor = '#ff4d4d';
+            // Handle gradient type changes
+            const radios = document.querySelectorAll('input[name="gradientType"]');
+            radios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    const angleControl = document.getElementById('gbg-angle-control');
+                    if (angleControl) {
+                        angleControl.style.display = radio.value === 'linear' ? 'block' : 'none';
                     }
                     this.updatePreview();
                 });
+            });
+        },
 
-                input.addEventListener('blur', (e) => {
-                    const color = utils.formatHexColor(e.target.value);
-                    if (color) {
-                        e.target.value = color;
-                        e.target.style.borderColor = '#444';
-                    }
+        // Initialize button controls
+        initButtonControls() {
+            // Button type change handler
+            const buttonType = document.getElementById('gbg-button-type');
+            if (buttonType) {
+                buttonType.addEventListener('change', this.updatePreview);
+            }
+
+            // Block ID input handler
+            const blockId = document.getElementById('gbg-block-id');
+            if (blockId) {
+                blockId.addEventListener('input', (e) => {
+                    e.target.value = utils.formatSquarespaceId(e.target.value);
+                    this.updatePreview();
                 });
             }
-        });
-    },
 
-    // Initialize color inputs
-    initializeColorInputs() {
-        const colorInputIds = [
-            'gbg-text-color',
-            'gbg-border-color',
-            'gbg-shadow-color'
-        ];
+            // Style control handlers
+            ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', (e) => {
+                        const color = utils.formatHexColor(e.target.value);
+                        if (color) {
+                            e.target.style.borderColor = '#444';
+                        } else {
+                            e.target.style.borderColor = '#ff4d4d';
+                        }
+                        this.updatePreview();
+                    });
 
-        colorInputIds.forEach(id => {
-            const input = document.getElementById(id);
-            if (input) {
-                input.addEventListener('focus', () => {
-                    currentlyFocusedInput = input;
-                    input.classList.add('color-input-focused');
-                });
+                    input.addEventListener('blur', (e) => {
+                        const color = utils.formatHexColor(e.target.value);
+                        if (color) {
+                            e.target.value = color;
+                            e.target.style.borderColor = '#444';
+                        }
+                    });
+                }
+            });
 
-                input.addEventListener('blur', () => {
-                    if (currentlyFocusedInput === input) {
-                        currentlyFocusedInput = null;
-                    }
-                    input.classList.remove('color-input-focused');
-                });
-
-                const originalPlaceholder = input.placeholder;
-                input.addEventListener('focus', () => {
-                    input.placeholder = 'Click a color swatch or enter hex code...';
-                });
-                input.addEventListener('blur', () => {
-                    input.placeholder = originalPlaceholder;
-                });
-            }
-        });
-    },
-
-    // Initialize preview updating
-    updatePreview() {
-        generator.generateCSS();
-     }
-};
     
+
+            document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
+                actions.copyToClipboard();
+                trackWidgetEvent('Copy Code');
+            });
+
+            document.querySelector('.gbg-clear-button')?.addEventListener('click', () => {
+                actions.clearFields();
+                trackWidgetEvent('Clear Fields');
+            });
+        },
+
+        // Initialize preview updating
+        updatePreview() {
+            generator.generateCSS();
+        }
+    };
 
     // Event Handlers
     const handlers = {
-    colorSwatch: {
-        handleClick(event) {
-            const swatch = event.target.closest('.gbg-color-swatch');
-            if (!swatch) return;
+        // Color swatch interaction handlers
+        colorSwatch: {
+            handleClick(event) {
+                const swatch = event.target.closest('.gbg-color-swatch');
+                if (!swatch) return;
 
-            // Handle gradient swatches
-            if (swatch.dataset.colors) {
-                const colors = JSON.parse(swatch.dataset.colors);
-                colors.forEach((color, index) => {
-                    const input = document.getElementById(`gbg-gradient-color-${index}`);
-                    if (input) {
-                        input.value = color;
-                        input.style.borderColor = '#444';
-                    }
-                });
-                trackWidgetEvent('Apply Gradient Preset');
-            } 
-            // Handle single color swatches
-            else if (swatch.dataset.color) {
-                const color = swatch.dataset.color;
-                
-                // If we have a focused input, update it
-                if (currentlyFocusedInput && ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].includes(currentlyFocusedInput.id)) {
-                    currentlyFocusedInput.value = color;
-                    currentlyFocusedInput.style.borderColor = '#444';
-                    trackWidgetEvent('Apply Color to Field', currentlyFocusedInput.id);
-                } else {
-                    // Original behavior for gradient color inputs
+                // Handle gradient swatches
+                if (swatch.dataset.colors) {
+                    const colors = JSON.parse(swatch.dataset.colors);
+                    colors.forEach((color, index) => {
+                        const input = document.getElementById(`gbg-gradient-color-${index}`);
+                        if (input) {
+                            input.value = color;
+                            input.style.borderColor = '#444';
+                        }
+                    });
+                    trackWidgetEvent('Apply Gradient Preset');
+                } 
+                // Handle single color swatches
+                else if (swatch.dataset.color) {
+                    // Find first empty gradient color input
                     const inputs = Array.from({ length: CONFIG.maxGradientColors }, (_, i) => 
                         document.getElementById(`gbg-gradient-color-${i}`));
                     
                     const emptyInput = inputs.find(input => !input.value.trim());
                     if (emptyInput) {
-                        emptyInput.value = color;
+                        emptyInput.value = swatch.dataset.color;
                         emptyInput.style.borderColor = '#444';
                         trackWidgetEvent('Apply Single Color');
                     }
                 }
+
+                generator.generateCSS();
+            },
+
+            handleDragStart(event) {
+                const swatch = event.target.closest('.gbg-color-swatch');
+                if (!swatch) return;
+
+                event.dataTransfer.setData('text/plain', 
+                    swatch.dataset.color || JSON.stringify(swatch.dataset.colors));
+                event.dataTransfer.effectAllowed = 'copy';
             }
-
-            generator.generateCSS();
-        }
-    }
-};
-
+        },
 
         // Input field handlers
         inputField: {
@@ -808,16 +781,16 @@ const initializers = {
     const generator = {
         // Get all current gradient colors
         getGradientColors() {
-    const colors = [];
-    for (let i = 0; i < CONFIG.maxGradientColors; i++) {  // Add 'let' here
-        const colorValue = utils.dom.getInputValue(`gbg-gradient-color-${i}`);
-        if (colorValue) {
-            const formattedColor = utils.formatHexColor(colorValue);
-            if (formattedColor) colors.push(formattedColor);
-        }
-    }
-    return colors.length > 0 ? colors : CONFIG.defaultColors;
-    },
+            const colors = [];
+            for (let i = 0; i < CONFIG.maxGradientColors; i++) {
+                const colorValue = utils.dom.getInputValue(`gbg-gradient-color-${i}`);
+                if (colorValue) {
+                    const formattedColor = utils.formatHexColor(colorValue);
+                    if (formattedColor) colors.push(formattedColor);
+                }
+            }
+            return colors.length > 0 ? colors : CONFIG.defaultColors;
+        },
 
         // Generate gradient style
         createGradientStyle(colors, angle = null) {
@@ -883,7 +856,7 @@ const initializers = {
             return styles.join(';\n    ');
         },
 
-        // Generate the compe CSS code
+        // Generate the complete CSS code
         generateCSS() {
             // Get basic setup
             const buttonType = utils.dom.getInputValue('gbg-button-type', CONFIG.defaultButtonType);
@@ -1175,8 +1148,6 @@ ${selector}:hover {
             initializers.initGradientInputs();
             initializers.initAngleControls();
             initializers.initButtonControls();
-            initializers.initializeColorInputs();
-            
 
             // Set up event listeners for swatches
             const swatchesContainer = document.getElementById('gbg-swatches-container');
@@ -1193,8 +1164,6 @@ ${selector}:hover {
         } catch (error) {
             utils.debug.error('Error initializing widget:', error);
         }
-
-        
     }
 
     // Make widget initialization function globally available
