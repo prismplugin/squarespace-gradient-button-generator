@@ -506,5 +506,43 @@ body {
     }
 }
 
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .gbg-preview-container {
+        background: #141414;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .gbg-preview-container {
+        border: 2px solid #ffffff;
+    }
+    
+    .gbg-section-title {
+        border-bottom: 1px solid #ffffff;
+        padding-bottom: 8px;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .gbg-preview-button {
+        transition: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .gbg-preview-section {
+        break-inside: avoid;
+        border: 1px solid #000;
+    }
+    
+    .gbg-preview-container {
+        border: 1px dashed #666;
+    }
+}
+
 
 
