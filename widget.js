@@ -8,12 +8,12 @@
 
     // Widget Configuration
     const CONFIG = {
-    defaultColors: ['#4EA8DE', '#6C63FF'], // New professional default
+    defaultColors: ['', ''],
     defaultAngle: 90,
     defaultButtonType: 'primary',
     maxGradientColors: 6,
     defaults: {
-        textColor: '#EBE8E0',
+        textColor: '',
         expandOnHover: 'no',
         gradientType: 'linear'
     },
@@ -545,95 +545,91 @@ function updateRecentGradientsDisplay() {
 
 
         initializeColorInputs() {
-    const colorInputIds = [
-        'gbg-text-color',
-        'gbg-border-color',
-        'gbg-shadow-color'
-    ];
-
-    colorInputIds.forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            // Add focus event
-            input.addEventListener('focus', () => {
-                currentlyFocusedInput = input;
-                // Add visual feedback class
-                input.classList.add('color-input-focused');
-            });
-
-            // Add blur event
-            input.addEventListener('blur', () => {
-                if (currentlyFocusedInput === input) {
-                    currentlyFocusedInput = null;
-                }
-                input.classList.remove('color-input-focused');
-            });
-
-            // Add placeholder text to help users
-            const originalPlaceholder = input.placeholder;
-            input.addEventListener('focus', () => {
-                input.placeholder = 'Click a color swatch or enter hex code...';
-            });
-            input.addEventListener('blur', () => {
-                input.placeholder = originalPlaceholder;
-            });
-        }
-    });
-},
-        
-        // Initialize button controls
-        initButtonControls() {
-            // Button type change handler
-            const buttonType = document.getElementById('gbg-button-type');
-            if (buttonType) {
-                buttonType.addEventListener('change', this.updatePreview);
-            }
-
-            // Block ID input handler
-            const blockId = document.getElementById('gbg-block-id');
-            if (blockId) {
-                blockId.addEventListener('input', (e) => {
-                    e.target.value = utils.formatSquarespaceId(e.target.value);
-                    this.updatePreview();
-                });
-            }
-
-            // Style control handlers
-            ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
+            const colorInputIds = [
+                'gbg-text-color',
+                'gbg-border-color',
+                'gbg-shadow-color'
+            ];
+    
+            colorInputIds.forEach(id => {
                 const input = document.getElementById(id);
                 if (input) {
-                    input.addEventListener('input', (e) => {
-                        const color = utils.formatHexColor(e.target.value);
-                        if (color) {
-                            e.target.style.borderColor = '#444';
-                        } else {
-                            e.target.style.borderColor = '#ff4d4d';
-                        }
-                        this.updatePreview();
+                    // Add focus event
+                    input.addEventListener('focus', () => {
+                        console.log('Input focused:', id); // Debug logging
+                        currentlyFocusedInput = input;
+                        input.classList.add('color-input-focused');
                     });
-
-                    input.addEventListener('blur', (e) => {
-                        const color = utils.formatHexColor(e.target.value);
-                        if (color) {
-                            e.target.value = color;
-                            e.target.style.borderColor = '#444';
+    
+                    // Add blur event
+                    input.addEventListener('blur', () => {
+                        console.log('Input blurred:', id); // Debug logging
+                        if (currentlyFocusedInput === input) {
+                            currentlyFocusedInput = null;
                         }
+                        input.classList.remove('color-input-focused');
                     });
+    
+                    // Add drag and drop handlers
+                    input.addEventListener('dragover', handlers.dragDrop.handleDragOver);
+                    input.addEventListener('drop', handlers.dragDrop.handleDrop);
                 }
             });
-
-    
-
-            document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
-                actions.copyToClipboard();
-                trackWidgetEvent('Copy Code');
-            });
-
-            document.querySelector('.gbg-clear-button')?.addEventListener('click', () => {
-                actions.clearFields();
-                trackWidgetEvent('Clear Fields');
-            });
         },
+        
+    // Initialize button controls
+    initButtonControls() {
+        // Button type change handler
+        const buttonType = document.getElementById('gbg-button-type');
+        if (buttonType) {
+            buttonType.addEventListener('change', this.updatePreview);
+        }
+
+        // Block ID input handler
+        const blockId = document.getElementById('gbg-block-id');
+        if (blockId) {
+            blockId.addEventListener('input', (e) => {
+                e.target.value = utils.formatSquarespaceId(e.target.value);
+                this.updatePreview();
+            });
+        }
+
+        // Style control handlers
+        ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', (e) => {
+                    const color = utils.formatHexColor(e.target.value);
+                    if (color) {
+                        e.target.style.borderColor = '#444';
+                    } else {
+                        e.target.style.borderColor = '#ff4d4d';
+                    }
+                    this.updatePreview();
+                });
+
+                input.addEventListener('blur', (e) => {
+                    const color = utils.formatHexColor(e.target.value);
+                    if (color) {
+                        e.target.value = color;
+                        e.target.style.borderColor = '#444';
+                    }
+                });
+            }
+        });
+
+
+
+        document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
+            actions.copyToClipboard();
+            trackWidgetEvent('Copy Code');
+        });
+
+        document.querySelector('.gbg-clear-button')?.addEventListener('click', () => {
+            actions.clearFields();
+            trackWidgetEvent('Clear Fields');
+        });
+    },
 
         // Initialize preview updating
         updatePreview() {
@@ -762,7 +758,7 @@ function updateRecentGradientsDisplay() {
                 const fields = {
                     'gbg-button-type': 'primary',
                     'gbg-block-id': '',
-                    'gbg-text-color': CONFIG.defaults.textColor,
+                    'gbg-text-color': '',
                     'gbg-border-color': '',
                     'gbg-expand-hover': 'no',
                     'gbg-shadow-color': ''
@@ -800,27 +796,73 @@ function updateRecentGradientsDisplay() {
 
         // Drag and drop handlers
         dragDrop: {
-            handleDragOver(event) {
-                event.preventDefault();
-                event.dataTransfer.dropEffect = 'copy';
+            handleDragStart(event) {
+                const swatch = event.target.closest('.gbg-color-swatch');
+                if (!swatch) return;
+                
+                // Set drag data based on swatch type
+                if (swatch.dataset.colors) {
+                    event.dataTransfer.setData('text/plain', JSON.stringify(JSON.parse(swatch.dataset.colors)));
+                } else if (swatch.dataset.color) {
+                    event.dataTransfer.setData('text/plain', swatch.dataset.color);
+                }
+                
+                event.dataTransfer.effectAllowed = 'copy';
+                swatch.classList.add('dragging');
             },
-
+    
+            handleDragEnd(event) {
+                const swatch = event.target.closest('.gbg-color-swatch');
+                if (swatch) {
+                    swatch.classList.remove('dragging');
+                }
+            },
+    
+            handleDragOver(event) {
+                // Only allow dropping on input fields
+                if (event.target.classList.contains('gbg-input-field')) {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = 'copy';
+                    event.target.classList.add('drag-over');
+                }
+            },
+    
+            handleDragLeave(event) {
+                if (event.target.classList.contains('gbg-input-field')) {
+                    event.target.classList.remove('drag-over');
+                }
+            },
+    
             handleDrop(event) {
                 event.preventDefault();
                 const input = event.target.closest('.gbg-input-field');
                 if (!input) return;
-
+    
+                input.classList.remove('drag-over');
+    
                 try {
                     const data = event.dataTransfer.getData('text/plain');
-                    const color = data.startsWith('[') ? JSON.parse(data)[0] : data;
-                    
-                    input.value = color;
-                    input.style.borderColor = '#444';
-                    generator.generateCSS();
-                    
-                    trackWidgetEvent('Color Drop');
+                    let color;
+    
+                    // Handle both single colors and gradient arrays
+                    try {
+                        const parsedData = JSON.parse(data);
+                        color = Array.isArray(parsedData) ? parsedData[0] : parsedData;
+                    } catch {
+                        color = data;
+                    }
+    
+                    // Validate color format
+                    color = utils.formatHexColor(color);
+                    if (color) {
+                        input.value = color;
+                        input.style.borderColor = '#444';
+                        generator.generateCSS();
+                        trackWidgetEvent('Color Drop Success');
+                    }
                 } catch (error) {
                     utils.debug.error('Drop handling failed:', error);
+                    trackWidgetEvent('Color Drop Failed');
                 }
             }
         }
@@ -888,7 +930,7 @@ function updateRecentGradientsDisplay() {
             const styles = [];
             
             // Text color
-            const textColor = utils.formatHexColor(utils.dom.getInputValue('gbg-text-color')) || CONFIG.defaults.textColor;
+            const textColor = utils.formatHexColor(utils.dom.getInputValue('gbg-text-color'));
             styles.push(`color: ${textColor} !important`);
 
             // Border
@@ -1193,18 +1235,54 @@ ${selector}:hover {
             target.appendChild(widget);
 
             // Initialize all components
+            initializers.initializeColorInputs();
             initializers.initColorSwatches();
             initializers.initGradientInputs();
             initializers.initAngleControls();
             initializers.initButtonControls();
-            initializers.initializeColorInputs();
+            
 
-            // Set up event listeners for swatches
-            const swatchesContainer = document.getElementById('gbg-swatches-container');
-            if (swatchesContainer) {
-                swatchesContainer.addEventListener('click', handlers.colorSwatch.handleClick);
-                swatchesContainer.addEventListener('dragstart', handlers.colorSwatch.handleDragStart);
+            // Set up click and drag handlers for color swatches
+        const swatchesContainer = document.getElementById('gbg-swatches-container');
+        if (swatchesContainer) {
+            // Add click handler to container (event delegation)
+            swatchesContainer.addEventListener('click', handlers.colorSwatch.handleClick);
+            
+            // Add drag handlers to individual swatches
+            const swatches = swatchesContainer.getElementsByClassName('gbg-color-swatch');
+            Array.from(swatches).forEach(swatch => {
+                swatch.setAttribute('draggable', 'true');
+                swatch.addEventListener('dragstart', handlers.dragDrop.handleDragStart);
+                swatch.addEventListener('dragend', handlers.dragDrop.handleDragEnd);
+                
+                // Prevent drag from interfering with click
+                swatch.addEventListener('mousedown', (e) => {
+                    swatch.draggable = e.target === swatch;
+                });
+            });
+        }
+
+        // Set up drop targets (all color input fields)
+        const colorInputs = document.querySelectorAll('.gbg-input-field[type="text"]');
+        colorInputs.forEach(input => {
+            input.addEventListener('dragover', handlers.dragDrop.handleDragOver);
+            input.addEventListener('dragleave', handlers.dragDrop.handleDragLeave);
+            input.addEventListener('drop', handlers.dragDrop.handleDrop);
+        });
+
+        // Add visual feedback styles
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            .gbg-color-swatch.dragging {
+                opacity: 0.7;
+                transform: scale(1.1);
             }
+            .gbg-input-field.drag-over {
+                border-color: #4361EE !important;
+                box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.3);
+            }
+        `;
+        document.head.appendChild(styleSheet);
 
             // Generate initial CSS
             generator.generateCSS();
@@ -1219,3 +1297,4 @@ ${selector}:hover {
     // Make widget initialization function globally available
     window.initGradientButtonGenerator = initGradientButtonGenerator;
 })();
+
