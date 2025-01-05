@@ -419,19 +419,30 @@ function updateRecentGradientsDisplay() {
 
     // Main HTML Generator Function
     function generateWidgetHTML() {
-        return `
-            ${templates.colorSwatches()}
-            <div class="gbg-main-content">
-                <h2 class="gbg-tool-title">Gradient Button Generator</h2>
-                ${templates.buttonControls()}
-                ${templates.gradientTypeControls()}
-                ${templates.angleControls()}
-                ${templates.gradientColors()}
-                ${templates.styleControls()}
-                ${templates.actionButtons()}
+    return `
+        ${templates.colorSwatches()}
+        <div class="gbg-main-content">
+            <h2 class="gbg-tool-title">Gradient Button Generator</h2>
+            
+            <!-- New Preview Section -->
+            <div class="gbg-preview-section">
+                <h3 class="gbg-section-title">Preview</h3>
+                <div id="gbg-preview" class="gbg-preview-container">
+                    <button class="sqs-button-element--primary gbg-preview-button">
+                        Preview Button
+                    </button>
+                </div>
                 ${templates.outputArea()}
-            </div>`;
-    }
+            </div>
+            
+            ${templates.buttonControls()}
+            ${templates.gradientTypeControls()}
+            ${templates.angleControls()}
+            ${templates.gradientColors()}
+            ${templates.styleControls()}
+            ${templates.actionButtons()}
+        </div>`;
+}
 
     // Component Initializers
     const initializers = {
@@ -982,26 +993,33 @@ ${selector}:hover {
             }
         },
 
-        // Update the preview if available
         updatePreview(code) {
-            const previewContainer = document.getElementById('gbg-preview');
-            if (previewContainer) {
-                // Extract styles from the code
-                const styleMatch = code.match(/<style>([\s\S]*?)<\/style>/);
-                if (styleMatch) {
-                    const styles = styleMatch[1];
-                    
-                    // Create preview button
-                    previewContainer.innerHTML = `
-                        <style>${styles}</style>
-                        <button class="sqs-button-element--${utils.dom.getInputValue('gbg-button-type', CONFIG.defaultButtonType)}">
-                            Preview Button
-                        </button>
-                    `;
-                }
+        const previewButton = document.querySelector('#gbg-preview .gbg-preview-button');
+        if (!previewButton) return;
+
+        // Extract styles from the generated CSS
+        const styleMatch = code.match(/<style>([\s\S]*?)<\/style>/);
+        if (styleMatch) {
+            const styles = styleMatch[1];
+            
+            // Remove any existing preview styles
+            const existingStyle = document.getElementById('gbg-preview-styles');
+            if (existingStyle) {
+                existingStyle.remove();
             }
+
+            // Create and append new style element
+            const styleElement = document.createElement('style');
+            styleElement.id = 'gbg-preview-styles';
+            styleElement.textContent = styles;
+            document.head.appendChild(styleElement);
+
+            // Update button class based on selected type
+            const buttonType = document.getElementById('gbg-button-type').value;
+            previewButton.className = `sqs-button-element--${buttonType} gbg-preview-button`;
         }
-    };
+    }
+};
 
     // Clipboard and UI Actions
     const actions = {
