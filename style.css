@@ -200,6 +200,39 @@ body {
     }
 }
 
+.gbg-preview-section {
+    background: #2b2b2b;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.gbg-section-title {
+    color: #e0e0e0;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.gbg-preview-container {
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.gbg-preview-button {
+    min-width: 150px;
+    padding: 12px 24px;
+    font-size: 16px;
+    transition: all 0.2s ease-in-out;
+}
 /* Grid Layouts */
 .gbg-gradient-colors-grid,
 .gbg-unified-grid,
