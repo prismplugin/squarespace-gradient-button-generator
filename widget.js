@@ -578,7 +578,7 @@ function updateRecentGradientsDisplay() {
             });
         }
     });
-}
+},
         
         // Initialize button controls
         initButtonControls() {
