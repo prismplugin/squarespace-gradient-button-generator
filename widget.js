@@ -4,6 +4,8 @@
     // Generate unique widget ID
     const widgetId = 'gradient-button-' + Math.random().toString(36).substr(2, 9);
 
+    let currentlyFocusedInput = null;
+
     // Widget Configuration
     const CONFIG = {
     defaultColors: ['#4EA8DE', '#6C63FF'], // New professional default
@@ -22,7 +24,7 @@
     }
 };
 
-// Update the COLOR_SWATCHES with new Popular category
+
 const COLOR_SWATCHES = {
     Basics: [
         { name: 'Pure White', value: '#FFFFFF' },
@@ -73,7 +75,6 @@ const COLOR_SWATCHES = {
             { name: 'Smooth', values: ['#5e60ce', '#4ea8de'] }
         ]
     };
-
 
     
     // Add Recently Used Gradients functionality
