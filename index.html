@@ -58,6 +58,13 @@
                 console.error('Gradient Button Generator widget failed to load');
             }
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = previewStyles;
+    document.head.appendChild(styleElement);
+});
+        
     </script>
 
     <!-- Optional: Basic page styles -->
