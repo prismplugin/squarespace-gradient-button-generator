@@ -285,10 +285,6 @@ function updateRecentGradientsDisplay() {
             return `
                 <div class="gbg-color-swatches">
                 <h3 class="gbg-tool-title">Color Swatches</h3>
-                <div class="gbg-category">
-                    <h4 class="gbg-category-title">Recent</h4>
-                    <div id="gbg-recent-gradients" class="gbg-swatches-grid"></div>
-                </div>
                 <div id="gbg-swatches-container"></div>
             </div>`;
         },
@@ -414,33 +410,52 @@ function updateRecentGradientsDisplay() {
             return `
                 <textarea id="gbg-output" readonly 
                           placeholder="Generated CSS will appear here..."></textarea>`;
+        },
+
+        copyButtonStyles() {
+            return `
+                .gbg-copy-button {
+                    position: relative;
+                    min-width: 100px;
+                    background: linear-gradient(to right, #4361EE, #1F43ED);
+                    transition: all 0.2s ease-in-out;
+                }
+
+                .gbg-copy-button:disabled {
+                    opacity: 0.7;
+                    cursor: default;
+                }
+            `;
         }
+
     };
 
     // Main HTML Generator Function
-    function generateWidgetHTML() {
+function generateWidgetHTML() {
     return `
         ${templates.colorSwatches()}
         <div class="gbg-main-content">
-            <h2 class="gbg-tool-title">Gradient Button Generator</h2>
-            
-            <!-- New Preview Section -->
+            <!-- Preview Section at the top -->
             <div class="gbg-preview-section">
-                <h3 class="gbg-section-title">Preview</h3>
                 <div id="gbg-preview" class="gbg-preview-container">
                     <button class="sqs-button-element--primary gbg-preview-button">
                         Preview Button
                     </button>
                 </div>
-                ${templates.outputArea()}
             </div>
             
+            <!-- Main Controls -->
             ${templates.buttonControls()}
             ${templates.gradientTypeControls()}
             ${templates.angleControls()}
             ${templates.gradientColors()}
             ${templates.styleControls()}
-            ${templates.actionButtons()}
+            
+            <!-- Output Area and Action Buttons at the bottom -->
+            <div class="gbg-output-section">
+            ${templates.actionButtons()}    
+            ${templates.outputArea()}
+            </div>
         </div>`;
 }
 
@@ -590,13 +605,12 @@ function updateRecentGradientsDisplay() {
         
     // Initialize button controls
     initButtonControls() {
-        // Button type change handler
+        // Button type and block ID handlers
         const buttonType = document.getElementById('gbg-button-type');
         if (buttonType) {
             buttonType.addEventListener('change', this.updatePreview);
         }
-
-        // Block ID input handler
+    
         const blockId = document.getElementById('gbg-block-id');
         if (blockId) {
             blockId.addEventListener('input', (e) => {
@@ -604,8 +618,8 @@ function updateRecentGradientsDisplay() {
                 this.updatePreview();
             });
         }
-
-        // Style control handlers
+    
+        // Color input handlers
         ['gbg-text-color', 'gbg-border-color', 'gbg-shadow-color'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {
@@ -618,7 +632,7 @@ function updateRecentGradientsDisplay() {
                     }
                     this.updatePreview();
                 });
-
+    
                 input.addEventListener('blur', (e) => {
                     const color = utils.formatHexColor(e.target.value);
                     if (color) {
@@ -628,18 +642,46 @@ function updateRecentGradientsDisplay() {
                 });
             }
         });
+    
+        // Style option handlers
+        const expandHoverSelect = document.getElementById('gbg-expand-hover');
+        if (expandHoverSelect) {
+            expandHoverSelect.addEventListener('change', (e) => {
+                generator.generateCSS();
+                trackWidgetEvent('Update Expand Hover', e.target.value);
+            });
+        }
+    
+        // Action button handlers
+        const copyButton = document.querySelector('.gbg-copy-button');
+        const clearButton = document.querySelector('.gbg-clear-button');
+    
+        if (copyButton) {
+            copyButton.addEventListener('click', () => {
+                actions.copyToClipboard();
+                trackWidgetEvent('Copy Code');
+            });
+        }
+    
+        if (clearButton) {
+            clearButton.addEventListener('click', () => {
+                actions.clearFields();
+                trackWidgetEvent('Clear Fields');
+            });
+        }
+    },
 
+    initCopyButton() {
+        // Add styles to document
+        const styleElement = document.createElement('style');
+        styleElement.textContent = templates.copyButtonStyles();
+        document.head.appendChild(styleElement);
 
-
-        document.querySelector('.gbg-copy-button')?.addEventListener('click', () => {
-            actions.copyToClipboard();
-            trackWidgetEvent('Copy Code');
-        });
-
-        document.querySelector('.gbg-clear-button')?.addEventListener('click', () => {
-            actions.clearFields();
-            trackWidgetEvent('Clear Fields');
-        });
+        // Set up click handler
+        const copyButton = document.querySelector('.gbg-copy-button');
+        if (copyButton) {
+            copyButton.addEventListener('click', handlers.buttonAction.handleCopy);
+        }
     },
 
         // Initialize preview updating
@@ -742,26 +784,49 @@ function updateRecentGradientsDisplay() {
         // Button action handlers
         buttonAction: {
             async handleCopy() {
+                const copyButton = document.querySelector('.gbg-copy-button');
+                if (!copyButton) return;
+    
+                const originalText = copyButton.textContent || 'Copy Code';
+                
                 try {
                     const output = document.getElementById('gbg-output');
                     await navigator.clipboard.writeText(output.value);
                     
-                    const copyButton = document.querySelector('.gbg-copy-button');
-                    const originalText = copyButton.textContent;
-                    
+                    // Update button text to show success
                     copyButton.textContent = 'Copied!';
+                    
+                    // Track successful copy
+                    trackWidgetEvent('Copy Success');
+                    
+                    // Reset button text after delay
                     setTimeout(() => {
                         copyButton.textContent = originalText;
                     }, 2000);
                     
-                    trackWidgetEvent('Copy Success');
                 } catch (error) {
-                    utils.debug.error('Copy failed:', error);
+                    console.error('Copy failed:', error);
+                    
                     // Fallback to selection method
-                    const output = document.getElementById('gbg-output');
-                    output.select();
-                    document.execCommand('copy');
-                    trackWidgetEvent('Copy Fallback');
+                    try {
+                        const output = document.getElementById('gbg-output');
+                        output.select();
+                        document.execCommand('copy');
+                        
+                        // Update button text even in fallback
+                        copyButton.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyButton.textContent = originalText;
+                        }, 2000);
+                        
+                        trackWidgetEvent('Copy Fallback Success');
+                    } catch (fallbackError) {
+                        copyButton.textContent = 'Error!';
+                        setTimeout(() => {
+                            copyButton.textContent = originalText;
+                        }, 2000);
+                        trackWidgetEvent('Copy Failed');
+                    }
                 }
             },
 
@@ -1258,6 +1323,7 @@ ${selector}:hover {
             initializers.initGradientInputs();
             initializers.initAngleControls();
             initializers.initButtonControls();
+            initializers.initCopyButton(); 
             
 
             // Set up click and drag handlers for color swatches
@@ -1315,4 +1381,5 @@ ${selector}:hover {
     // Make widget initialization function globally available
     window.initGradientButtonGenerator = initGradientButtonGenerator;
 })();
+
 
