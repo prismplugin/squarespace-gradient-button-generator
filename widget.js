@@ -355,9 +355,19 @@ function updateRecentGradientsDisplay() {
                                 <label class="gbg-input-label">
                                     Gradient Color ${i + 1} ${i > 1 ? '(optional)' : ''}
                                 </label>
-                                <input type="text" id="gbg-gradient-color-${i}" 
-                                       class="gbg-input-field" placeholder="e.g., #00FF87"
-                                       value="${i < CONFIG.defaultColors.length ? CONFIG.defaultColors[i] : ''}">
+                                <div class="gbg-color-input-wrapper">
+                                    <input type="text" 
+                                           id="gbg-gradient-color-${i}" 
+                                           class="gbg-input-field" 
+                                           placeholder="e.g., #00FF87"
+                                           value="${i < CONFIG.defaultColors.length ? CONFIG.defaultColors[i] : ''}">
+                                    <div class="gbg-color-preview" id="gbg-gradient-color-${i}-preview">
+                                        <input type="color" 
+                                               id="gbg-gradient-color-${i}-picker" 
+                                               class="gbg-color-picker" 
+                                               aria-label="Color picker for gradient color ${i + 1}">
+                                    </div>
+                                </div>
                             </div>
                         `).join('')}
                     </div>
@@ -370,16 +380,37 @@ function updateRecentGradientsDisplay() {
                 <div class="gbg-unified-grid">
                     <div class="gbg-input-group">
                         <label class="gbg-input-label">Text Color</label>
-                        <input type="text" id="gbg-text-color" class="gbg-input-field" 
-                               value="${CONFIG.defaults.textColor}" placeholder="e.g., #EBE8E0">
+                        <div class="gbg-color-input-wrapper">
+                            <input type="text" 
+                                   id="gbg-text-color" 
+                                   class="gbg-input-field" 
+                                   value="${CONFIG.defaults.textColor}" 
+                                   placeholder="e.g., #EBE8E0">
+                            <div class="gbg-color-preview" id="gbg-text-color-preview">
+                                <input type="color" 
+                                       id="gbg-text-color-picker" 
+                                       class="gbg-color-picker" 
+                                       aria-label="Color picker for text color">
+                            </div>
+                        </div>
                     </div>
-
+        
                     <div class="gbg-input-group">
                         <label class="gbg-input-label">Border Color</label>
-                        <input type="text" id="gbg-border-color" class="gbg-input-field" 
-                               placeholder="e.g., #000000">
+                        <div class="gbg-color-input-wrapper">
+                            <input type="text" 
+                                   id="gbg-border-color" 
+                                   class="gbg-input-field" 
+                                   placeholder="e.g., #000000">
+                            <div class="gbg-color-preview" id="gbg-border-color-preview">
+                                <input type="color" 
+                                       id="gbg-border-color-picker" 
+                                       class="gbg-color-picker" 
+                                       aria-label="Color picker for border color">
+                            </div>
+                        </div>
                     </div>
-
+        
                     <div class="gbg-input-group">
                         <label class="gbg-input-label">Expand on Hover</label>
                         <select id="gbg-expand-hover" class="gbg-input-field">
@@ -387,11 +418,21 @@ function updateRecentGradientsDisplay() {
                             <option value="yes">Yes</option>
                         </select>
                     </div>
-
+        
                     <div class="gbg-input-group">
                         <label class="gbg-input-label">Shadow Color on Hover</label>
-                        <input type="text" id="gbg-shadow-color" class="gbg-input-field" 
-                               placeholder="e.g., #4ea8de">
+                        <div class="gbg-color-input-wrapper">
+                            <input type="text" 
+                                   id="gbg-shadow-color" 
+                                   class="gbg-input-field" 
+                                   placeholder="e.g., #4ea8de">
+                            <div class="gbg-color-preview" id="gbg-shadow-color-preview">
+                                <input type="color" 
+                                       id="gbg-shadow-color-picker" 
+                                       class="gbg-color-picker" 
+                                       aria-label="Color picker for shadow color">
+                            </div>
+                        </div>
                     </div>
                 </div>`;
         },
@@ -571,34 +612,92 @@ function generateWidgetHTML() {
 
 
         initializeColorInputs() {
-            const colorInputIds = [
+            const gradientColorIds = Array.from({ length: CONFIG.maxGradientColors }, 
+                (_, i) => `gbg-gradient-color-${i}`);
+            
+            const styleColorIds = [
                 'gbg-text-color',
                 'gbg-border-color',
                 'gbg-shadow-color'
             ];
     
-            colorInputIds.forEach(id => {
+            const allColorInputs = [...gradientColorIds, ...styleColorIds];
+    
+            // Function to show a temporary tooltip
+            const showTooltip = (element, message) => {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'gbg-tooltip';
+                tooltip.textContent = message;
+                
+                // Position tooltip above the color preview
+                element.appendChild(tooltip);
+                
+                // Remove tooltip after animation
+                setTimeout(() => {
+                    tooltip.classList.add('gbg-tooltip-fade');
+                    setTimeout(() => tooltip.remove(), 300);
+                }, 1000);
+            };
+    
+            // Function to copy color to clipboard
+            const copyToClipboard = async (color, preview) => {
+                try {
+                    await navigator.clipboard.writeText(color);
+                    showTooltip(preview, 'Color copied!');
+                    trackWidgetEvent('Color Copy Success');
+                } catch (error) {
+                    console.error('Failed to copy color:', error);
+                    showTooltip(preview, 'Copy failed');
+                    trackWidgetEvent('Color Copy Failed');
+                }
+            };
+    
+            allColorInputs.forEach(id => {
                 const input = document.getElementById(id);
+                const preview = document.getElementById(`${id}-preview`);
+                const picker = document.getElementById(`${id}-picker`);
+    
                 if (input) {
-                    // Add focus event
-                    input.addEventListener('focus', () => {
-                        console.log('Input focused:', id); // Debug logging
-                        currentlyFocusedInput = input;
-                        input.classList.add('color-input-focused');
-                    });
+                    // ... existing focus and drag/drop handlers ...
     
-                    // Add blur event
-                    input.addEventListener('blur', () => {
-                        console.log('Input blurred:', id); // Debug logging
-                        if (currentlyFocusedInput === input) {
-                            currentlyFocusedInput = null;
+                    // Color picker functionality
+                    if (preview && picker) {
+                        // Update preview when input changes
+                        input.addEventListener('input', (e) => {
+                            const color = utils.formatHexColor(e.target.value);
+                            if (color) {
+                                preview.style.backgroundColor = color;
+                                picker.value = color;
+                                input.style.borderColor = '#444';
+                            } else {
+                                preview.style.backgroundColor = 'transparent';
+                                input.style.borderColor = '#ff4d4d';
+                            }
+                            generator.generateCSS();
+                        });
+    
+                        // Update input when picker changes and copy to clipboard
+                        picker.addEventListener('input', (e) => {
+                            const color = e.target.value.toUpperCase();
+                            input.value = color;
+                            preview.style.backgroundColor = color;
+                            input.style.borderColor = '#444';
+                            generator.generateCSS();
+                        });
+    
+                        // Add clipboard copy on picker change
+                        picker.addEventListener('change', (e) => {
+                            const color = e.target.value.toUpperCase();
+                            copyToClipboard(color, preview);
+                        });
+    
+                        // Handle initial state
+                        const initialColor = utils.formatHexColor(input.value);
+                        if (initialColor) {
+                            preview.style.backgroundColor = initialColor;
+                            picker.value = initialColor;
                         }
-                        input.classList.remove('color-input-focused');
-                    });
-    
-                    // Add drag and drop handlers
-                    input.addEventListener('dragover', handlers.dragDrop.handleDragOver);
-                    input.addEventListener('drop', handlers.dragDrop.handleDrop);
+                    }
                 }
             });
         },
