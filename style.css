@@ -150,6 +150,49 @@ body {
   margin-bottom: 24px;
 }
 
+.gbg-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 1000;
+  animation: tooltipFadeIn 0.2s ease-in-out;
+}
+
+.gbg-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+}
+
+.gbg-tooltip-fade {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+      opacity: 0;
+      transform: translate(-50%, 4px);
+  }
+  to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+  }
+}
+
 #gbg-recent-gradients {
     margin-bottom: 20px;
     min-height: 24px; /* Maintain height even when empty */
@@ -169,13 +212,22 @@ body {
   font-size: 14px;
 }
 
+.gbg-input-field.color-input-focused {
+  border-color: #4361EE !important;
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.3) !important;
+}
+
+/* Update existing input field styles */
 .gbg-input-field {
+  flex: 1;
   padding: 8px;
+  min-width: 0; /* Prevents flex items from overflowing */
   background-color: #2b2b2b !important;
   border: 1px solid #444;
   border-radius: 4px;
   color: #e0e0e0;
   font-size: 14px;
+  transition: all 0.2s ease-in-out;
 }
 
 .color-input-focused {
@@ -238,6 +290,10 @@ body {
 
 .gbg-gradient-colors-grid {
   margin-bottom: 24px;
+}
+
+.gbg-gradient-colors-grid .gbg-input-group {
+  margin-bottom: 0;
 }
 
 .gbg-gradient-colors-grid .gbg-input-group,
@@ -323,20 +379,29 @@ body {
   margin-bottom: 16px;
 }
 
+.gbg-color-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .gbg-color-picker-wrapper {
   position: relative;
   flex: 1;
 }
 
 .gbg-color-picker {
-  width: 100%;
-  padding: 8px;
-  background: #2b2b2b;
-  border: 1px solid #444;
-  border-radius: 4px;
-  color: #e0e0e0;
-  font-size: 14px;
+  position: absolute;
+  inset: -2px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
   cursor: pointer;
+  opacity: 0;
 }
 
 .gbg-color-preview {
@@ -344,6 +409,33 @@ body {
   height: 36px;
   border-radius: 4px;
   border: 1px solid #444;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  flex-shrink: 0;
+}
+
+.gbg-color-preview {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  flex-shrink: 0;
+}
+
+/* Hover and focus states */
+.gbg-color-preview:hover {
+  transform: scale(1.05);
+  border-color: #666;
+}
+
+.gbg-color-preview:active {
+  transform: scale(0.95);
 }
 
 /* Compact Groups */
@@ -546,5 +638,6 @@ body {
         border: 1px dashed #666;
     }
 }
+
 
 
