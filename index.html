@@ -44,13 +44,10 @@
     <!-- Initialize Widget -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Content Loaded');
-            console.log('initGradientButtonGenerator available:', !!window.initGradientButtonGenerator);
-            
             if (typeof window.initGradientButtonGenerator === 'function') {
                 try {
                     window.initGradientButtonGenerator('gradient-button-generator');
-                    console.log('Widget initialization attempted');
+                    console.log('Widget initialized successfully');
                 } catch (error) {
                     console.error('Error during widget initialization:', error);
                 }
@@ -58,13 +55,6 @@
                 console.error('Gradient Button Generator widget failed to load');
             }
         });
-
-        document.addEventListener('DOMContentLoaded', () => {
-    const styleElement = document.createElement('style');
-    styleElement.textContent = previewStyles;
-    document.head.appendChild(styleElement);
-});
-        
     </script>
 
     <!-- Optional: Basic page styles -->
